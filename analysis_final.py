@@ -25,7 +25,7 @@ processList = {
 procDict = "FCCee_procDict_spring2021_IDEA.json"
 
 #Add MySample_p8_ee_ZH_ecm240 as it is not an offical process
-procDictAdd={"Signal_ecm240":{"numberOfEvents": 100000, "sumOfWeights": 1000000, "crossSection": 0.001, "kfactor": 1.0, "matchingEfficiency": 1.0}}
+procDictAdd={"Signal_ecm240":{"numberOfEvents": 100000, "sumOfWeights": 100000, "crossSection": 0.001, "kfactor": 1.0, "matchingEfficiency": 1.0}}
 
 #Number of CPUs to use
 nCPUS = 4
@@ -34,10 +34,10 @@ nCPUS = 4
 #doTree = False
 
 ###Dictionnay of the list of cuts. The key is the name of the selection that will be added to the output file
-cutList = {"sel0":"Zcand_q == 0",
-            "sel1":"Zcand_q == -1 || Zcand_q == 1",
-            "sel2":"Zcand_m > 80 && Zcand_m < 100",
-            "sel3":"MyFilter==true && (Zcand_m < 80 || Zcand_m > 100)"
+cutList = {#"sel0":"Zcand_q == 0",
+            #"sel1":"Zcand_q == -1 || Zcand_q == 1",
+            "sel0":"Zcand_m > 0 && Zcand_m < 240",
+            #"sel3":"MyFilter==true && (Zcand_m < 80 || Zcand_m > 100)"
             }
 
 
@@ -61,13 +61,21 @@ histoList = {
     "missingET_y":{"name":"missingET_py","title":"Py","bin":100,"xmin":0,"xmax":150},
     "missingET_z":{"name":"missingET_pz","title":"Pz","bin":100,"xmin":0,"xmax":150},
     "missingET_e":{"name":"missingET_e","title":"Missing Energy [GeV]","bin":100,"xmin":0,"xmax":150},
-    "MCAngleBW":{"name":"MCdeltaR","title":"Angle Between Muons","bin":100,"xmin":0,"xmax":5},
-    "RCAngleBW":{"name":"RCdeltaR","title":"Angle Between Muons","bin":100,"xmin":0,"xmax":5},
+    "MCAngleBW":{"name":"MCdeltaR","title":"Monte Carlo delta R","bin":150,"xmin":0,"xmax":5},
+    "RCAngleBW":{"name":"RCdeltaR","title":"Reconstructed deltaR","bin":150,"xmin":0,"xmax":5},
 #    "FS_eta":{"name":"FSGenElectron_eta","title":"Eta","bin":100,"xmin":-4,"xmax":4},
 #    "FS_theta":{"name":"FSGenElectron_theta","title":"Theta","bin":100,"xmin":-4,"xmax":4},
 #    "FS_phi":{"name":"FSGenElectron_phi","title":"Phi","bin":100,"xmin":-4,"xmax":4},
     "muon_eta":{"name":"muon_eta","title":"Eta","bin":100,"xmin":0,"xmax":5},
+    "resoAngleBW":{"name":"reso_deltaR","title":"deltaR with Resonance Matching Muons","bin":150,"xmin":0,"xmax":5},
+
+    "acoplanarity":{"name":"acoplanarity","title":"Acoplanarity between selected muons","bin":150,"xmin":0,"xmax":3.5},
+    "missingCosTheta":{"name":"cosTheta_miss","title":"cosTheta of missing energy vector","bin":150,"xmin":0,"xmax":1.5},
+    "RecoMissingEnergy":{"name":"RecoMissingEnergy_e","title":"Missing Energy [GeV]","bin":100,"xmin":0,"xmax":150},
+    # 2D histograms 
     "eta_MCdeltaR":{"cols":["muon_eta", "MCdeltaR"],"title":"eta - MCdeltaR", "bins": [(100,0,4), (100,0,4)]}, # 2D histogram
-    "eta_RCdeltaR":{"cols":["muon_eta", "RCdeltaR"],"title":"eta - RCdeltaR", "bins": [(100,0,4), (100,0,4)]}
+    "eta_RCdeltaR":{"cols":["muon_eta", "RCdeltaR"],"title":"eta - RCdeltaR", "bins": [(100,0,4), (100,0,4)]},
+    "massVdR":{"cols":["Zcand_m", "reso_deltaR"],"title":"mass - RCdeltaR", "bins": [(100,0,240), (100,0,5)]}, # 2D histogram  
+
 
 }

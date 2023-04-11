@@ -1,18 +1,18 @@
 #Mandatory: List of processes
 processList = {
-    'p8_ee_ZZ_ecm240':{'chunks':20},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZZ_ecm240/chunk<N>.root
-    'p8_ee_WW_ecm240':{'chunks':20},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
-    'p8_ee_ZH_ecm240':{'chunks':20}, #Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZH_ecm240/chunk<N>.root
-    'p8_ee_Zqq_ecm240':{},
-    'p8_ee_Zll_ecm240':{},
-    'kkmcp8_ee_mumu_noFSR_ecm240':{'chunks':10},
-    'wzp6_ee_eeH_ecm240':{},
-    'wzp6_ee_mumuH_ecm240':{},
-    'wzp6_ee_nuenueZ_ecm240':{},
+    'p8_ee_ZZ_ecm240':{'fraction':.1,'chunks':10},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZZ_ecm240/chunk<N>.root
+    'p8_ee_WW_ecm240':{'fraction':.1,'chunks':10},#Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_WW_ecm240/chunk<N>.root
+    'p8_ee_ZH_ecm240':{'fraction':.1,'chunks':10}, #Run the full statistics in 10 jobs in output dir <outputDir>/p8_ee_ZH_ecm240/chunk<N>.root
+    'p8_ee_Zqq_ecm240':{'fraction':.1,'chunks':10},
+    'p8_ee_Zll_ecm240':{'fraction':.1,'chunks':10},
+    'kkmcp8_ee_mumu_noFSR_ecm240':{'fraction':.1,'chunks':5},
+    'wzp6_ee_eeH_ecm240':{'chunks':5},
+    'wzp6_ee_mumuH_ecm240':{'chunks':10},
+    'wzp6_ee_nuenueZ_ecm240':{'chunks':10},
     'wzp6_ee_nunuH_ecm240':{'chunks':10},
     'wzp6_ee_qqH_ecm240':{'chunks':10},
     'wzp6_ee_tautau_ecm240':{'chunks':10},
-    'wzp6_ee_mumu_ecm240':{'chunks':10},
+    'wzp6_ee_mumu_ecm240':{'fraction':.1,'chunks':10},
 }
 
 #Mandatory: Production tag when running over EDM4Hep centrally produced events, this points to the yaml files for getting sample statistics
@@ -57,9 +57,9 @@ class RDFanalysis():
             .Alias("Particle1", "Particle#1.index")
 
             # define an alias for muon index collection
-            .Alias("Muon0", "Muon#0.index")
+            .Alias("AllMuon0", "AllMuon#0.index")
             # define the muon collection
-            .Define("muons",  "ReconstructedParticle::get(Muon0, ReconstructedParticles)")
+            .Define("muons",  "ReconstructedParticle::get(AllMuon0, ReconstructedParticles)")
             #select muons on pT
             .Define("selected_muons", "ReconstructedParticle::sel_pt(0)(muons)")
             # create branch with muon transverse momentum
@@ -99,8 +99,6 @@ class RDFanalysis():
 #            .Define("Mus",  "selMC_leg(1) ( A2mumu_indices, Particle )")                          
 
             .Define("deltaAlpha_ave","ReconstructedParticle::angular_separationBuilder(2)( ARecoParticles )")
-
-            # POTENTIAL PROBLEM AREA
             
             #Gen Level
             .Define("stable",  "MCParticle::sel_genStatus(1) ( Particle )")
@@ -118,8 +116,23 @@ class RDFanalysis():
             .Define("RC_Muminus_tlv", "ReconstructedParticle::get_tlv( RC_Muminus_q  ) ")
             .Define("RC_Muplus_tlv", "ReconstructedParticle::get_tlv( RC_Muplus_q  ) ")
             .Define("RCdeltaR", " if ( RC_Muminus_tlv.size() > 0 && RC_Muplus_tlv.size() > 0) return RC_Muminus_tlv[0].DeltaR( RC_Muplus_tlv[0] ) ; else return -9999. ;  ")
-
+            
+            
             .Define("muon_eta", "ReconstructedParticle::get_eta(selected_muons)")
+
+            .Define("selected_muons_no", "FCCAnalyses::ReconstructedParticle::get_n(selected_muons)")
+            .Filter("selected_muons_no >= 2")
+            .Define("zbuilder_result", "ReconstructedParticle::resonanceBuilder_mass_recoil(5,125,0,240, false)(selected_muons, MCRecoAssociations0, MCRecoAssociations1, ReconstructedParticles, Particle, Particle0, Particle1)")
+            .Define("zll_muons", "ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>{zbuilder_result[1],zbuilder_result[2]}")
+            .Define("reso_deltaR", "ReconstructedParticle::deltaR(zll_muons)")
+
+            # Checking acoplanarity for signal and WW                                                                                                                            
+            .Define("acoplanarity", "ReconstructedParticle::acoplanarity(selected_muons)")
+
+            # Reducing Z/gamma to mumu backgrounds                                                                                                                               
+            #.Define("missingEnergy", "FCCAnalyses::missingEnergy(240., ReconstructedParticles)")                                                                                
+            #.Define("cosTheta_miss", "FCCAnalyses::get_cosTheta_miss(missingEnergy)")                                                                                           
+            .Define("cosTheta_miss", "ReconstructedParticle::get_cosTheta_miss(MissingET)")
 
 
             #FSGenParticle for e+e-
@@ -156,7 +169,10 @@ class RDFanalysis():
             "deltaAlpha_ave",
             "MCdeltaR",
             "RCdeltaR",
-            "muon_eta"
+            "muon_eta",
+            "reso_deltaR",
 
+            "acoplanarity",
+            "cosTheta_miss"
         ]
         return branchList

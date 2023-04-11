@@ -58,7 +58,7 @@ class RDFanalysis():
                .Define("Zcand_pt","zed_leptonic_pt[0]")
                #Define Z candidate charge
                .Define("Zcand_q","zed_leptonic_charge[0]")
-               .Filter("zed_leptonic_m.size() == 1 && Zcand_q == 0")
+## Q Filter               .Filter("Zcand_q == 0")
                
                #Define new var rdf entry (example)
                .Define("entry", "rdfentry_")
@@ -78,7 +78,9 @@ class RDFanalysis():
 
             "missingET_px","missingET_py","missingET_pz","missingET_e",
 
-            "deltaAlpha_ave","MCdeltaR","RCdeltaR","muon_eta"
+            "deltaAlpha_ave","MCdeltaR","RCdeltaR","muon_eta","reso_deltaR",
+
+            "acoplanarity","cosTheta_miss","RecoMissingEnergy_e"
         ]
         return branchList
 
