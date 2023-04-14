@@ -139,17 +139,17 @@ class RDFanalysis():
             .Define("muon_q", "FCCAnalyses::ReconstructedParticle::get_charge(selected_muons)")
             .Filter("selected_muons_no >= 2 && abs(Sum(muon_q)) < muon_q.size()")
             
-#            .Filter("acoplanarity > 2.7 && acoplanarity < 3.2") #Filter1
+            .Filter("acoplanarity > 2.7 && acoplanarity < 3.2") #Filter1
             
             .Define("zll", "ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>{zbuilder_result[0]}") # the Z                                                               
             .Define("zll_recoil", "FCCAnalyses::ReconstructedParticle::recoilBuilder(240)(zll)")
             .Define("zll_recoil_m", "FCCAnalyses::ReconstructedParticle::get_mass(zll_recoil)[0]")
-#            .Filter("zll_recoil_m > 100 && zll_recoil_m < 200") #Filter2
+            .Filter("zll_recoil_m > 100 && zll_recoil_m < 200") #Filter2
 
 #            .Filter("reso_deltaR < 1")
 
             .Define("RecoMissingEnergy_e", "ReconstructedParticle::get_e(MissingET)[0]")
-#            .Filter("RecoMissingEnergy_e < 60") #Filter3  
+            .Filter("RecoMissingEnergy_e < 60") #Filter3  
 
             #FSGenParticle for e+e-
             .Define("GenElectron_PID", "MCParticle::sel_pdgID(11, true)(Particle)")

@@ -4,6 +4,12 @@ inputDir  = "stage2"
 #Input directory where the files produced at the pre-selection level are
 outputDir  = "final"
 
+#Integrated luminosity for scaling number of events (required only if setting doScale to true)
+intLumi = 5.0e+06 #in pb-1
+
+#Scale event yields by intLumi and cross section (optional)
+doScale = True
+
 processList = {
     'p8_ee_ZZ_ecm240':{},#Run over the full statistics from stage2 input file <inputDir>/p8_ee_ZZ_ecm240.root. Keep the same output name as input
     'p8_ee_WW_ecm240':{}, #Run over the statistics from stage2 input files <inputDir>/p8_ee_WW_ecm240_out/*.root. Keep the same output name as input
@@ -43,8 +49,8 @@ cutList = {#"sel0":"Zcand_q == 0",
 
 #Dictionary for the ouput variable/hitograms. The key is the name of the variable in the output files. "name" is the name of the variable in the input file, "title" is the x-axis label of the histogram, "bin" the number of bins of the histogram, "xmin" the minimum x-axis value and "xmax" the maximum x-axis value.
 histoList = {
-    "mz":{"name":"Zcand_m","title":"m_{Z} [GeV]","bin":125,"xmin":0,"xmax":240},
-    "mz_zoom":{"name":"Zcand_m","title":"m_{Z} [GeV]","bin":100,"xmin":0,"xmax":20},
+    "mz":{"name":"Zcand_m","title":"m_{#mu#mu} [GeV]","bin":125,"xmin":0,"xmax":240},
+    "mz_zoom":{"name":"Zcand_m","title":"m_{#mu#mu} [GeV]","bin":100,"xmin":0,"xmax":20},
     "leptonic_recoil_m":{"name":"Zcand_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":0,"xmax":200},
     "leptonic_recoil_m_zoom":{"name":"Zcand_recoil_m","title":"Z leptonic recoil [GeV]","bin":200,"xmin":80,"xmax":160},
     "leptonic_recoil_m_zoom1":{"name":"Zcand_recoil_m","title":"Z leptonic recoil [GeV]","bin":100,"xmin":120,"xmax":140},
